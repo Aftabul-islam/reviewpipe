@@ -6,6 +6,7 @@
   "description": "Pipeline framework for analyzing e-commerce customer reviews",
   "scripts": {
     "test": "vitest run",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --ext .ts",
     "data:download": "bash scripts/download-datasets.sh",

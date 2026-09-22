@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "paths": {}
+  },
+  "references": [{ "path": "../core/tsconfig.build.json" }],
+  "exclude": ["src/**/*.test.ts", "src/**/*.integration.test.ts"]
+}

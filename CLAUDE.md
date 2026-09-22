@@ -115,11 +115,13 @@ add more prose around it.
 - `pnpm benchmark` — run the Phase 11 benchmark suite against `data/raw/`
 
 ## Current status
-Phase 3 done. `packages/core` has the schema, the four interfaces, the
+Phase 4 done. `packages/core` has the schema, the four interfaces, the
 `AnalysisResult` type, the `Pipeline` engine, and provider-agnostic
 `aggregate()`. `packages/provider-lexicon` adds the zero-dependency
 `LexiconProvider` (bundled AFINN sentiment), plus `scoreSentiment` and a
-TF-IDF `extractKeywords`. Next: Phase 4, CSV + JSON adapters. See
+TF-IDF `extractKeywords`. `packages/adapter-csv` (`CsvAdapter`, uses csv-parse)
+and `packages/adapter-json` (`FieldMapAdapter`, field→dot-path mapping) turn
+raw input into `NormalizedReview[]`. Next: Phase 5, JSON + CSV exporters. See
 `docs/DEV_GUIDE.md`.
 
 Cross-package imports resolve to source, build-free: `pnpm -w typecheck` runs

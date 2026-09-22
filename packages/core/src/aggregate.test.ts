@@ -41,7 +41,6 @@ describe('aggregate — overall sentiment', () => {
       negative: 0,
       reviewCount: 0,
     });
-    expect(result.themes).toEqual([]);
     expect(result.trend).toEqual([]);
     expect(result.flagged).toEqual([]);
   });

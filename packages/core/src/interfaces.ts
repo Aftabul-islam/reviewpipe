@@ -1,5 +1,5 @@
 import type { NormalizedReview } from './schema.js';
-import type { AnalysisResult, SentimentLabel } from './result.js';
+import type { AnalysisResult, SentimentLabel, Theme } from './result.js';
 
 /** A value that may be returned synchronously or as a promise. */
 export type Awaitable<T> = T | Promise<T>;
@@ -112,4 +112,28 @@ export type ExporterOutput = string | Uint8Array;
 export interface Exporter {
   /** Serialize the result for output. */
   export(result: AnalysisResult): Awaitable<ExporterOutput>;
+}
+
+/**
+ * One review handed to a {@link ThemeExtractor}, carrying whatever signals the
+ * pipeline gathered: its sentiment score (when classified) and its embedding
+ * vector (only when the provider supports `embed`). An extractor that needs
+ * embeddings but finds them absent should fall back to text-only clustering.
+ */
+export interface ThemeItem {
+  review: NormalizedReview;
+  /** Sentiment score in `[-1, 1]`, present when the review was classified. */
+  sentiment?: number;
+  /** Embedding vector, present only when the provider produced one. */
+  embedding?: number[];
+}
+
+/**
+ * Groups reviews into recurring {@link Theme}s. Kept out of the core so the
+ * clustering implementation (and its dependencies) stays optional — the
+ * pipeline runs one only when {@link Pipeline.themes} is given it.
+ */
+export interface ThemeExtractor {
+  /** Produce themes from the gathered per-review signals. */
+  extract(items: ThemeItem[]): Awaitable<Theme[]>;
 }

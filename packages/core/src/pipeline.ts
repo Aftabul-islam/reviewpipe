@@ -5,8 +5,10 @@ import type {
   AnalysisProvider,
   Exporter,
   ExporterOutput,
+  ThemeExtractor,
+  ThemeItem,
 } from './interfaces.js';
-import type { AnalysisResult, PipelineError } from './result.js';
+import type { AnalysisResult, PipelineError, Theme } from './result.js';
 import { SCHEMA_VERSION } from './result.js';
 import { aggregate, type ClassifiedReview } from './aggregate.js';
 
@@ -34,6 +36,7 @@ export class Pipeline {
   private adapter?: SourceAdapter;
   private readonly transformers: Transformer[] = [];
   private analysisProvider?: AnalysisProvider;
+  private themeExtractor?: ThemeExtractor;
   private exporter?: Exporter;
 
   /** Set the input adapter. Required before {@link Pipeline.run}. */
@@ -51,6 +54,16 @@ export class Pipeline {
   /** Set the analysis provider. Required before {@link Pipeline.run}. */
   provider(provider: AnalysisProvider): this {
     this.analysisProvider = provider;
+    return this;
+  }
+
+  /**
+   * Set the theme extractor. Optional — without one, `result.themes` is empty.
+   * The pipeline supplies it each review's sentiment score plus, when the
+   * provider supports `embed`, an embedding vector.
+   */
+  themes(extractor: ThemeExtractor): this {
+    this.themeExtractor = extractor;
     return this;
   }
 
@@ -75,10 +88,12 @@ export class Pipeline {
     const reviews = await this.load(input);
     const classified = await this.classify(reviews, provider, errors);
     const summary = await this.summarize(reviews, provider, errors);
+    const themes = await this.extractThemes(reviews, classified, provider, errors);
 
     const result: AnalysisResult = {
       schemaVersion: SCHEMA_VERSION,
       ...aggregate(classified),
+      themes,
       ...(summary !== undefined ? { summary } : {}),
       errors,
     };
@@ -143,6 +158,62 @@ export class Pipeline {
       });
       return undefined;
     }
+  }
+
+  private async extractThemes(
+    reviews: NormalizedReview[],
+    classified: ClassifiedReview[],
+    provider: AnalysisProvider,
+    errors: PipelineError[],
+  ): Promise<Theme[]> {
+    const extractor = this.themeExtractor;
+    if (!extractor) return [];
+
+    const items = await this.buildThemeItems(reviews, classified, provider, errors);
+    try {
+      return await extractor.extract(items);
+    } catch (err) {
+      errors.push({
+        stage: 'themes',
+        message: `theme extraction failed: ${errorMessage(err)}`,
+      });
+      return [];
+    }
+  }
+
+  private async buildThemeItems(
+    reviews: NormalizedReview[],
+    classified: ClassifiedReview[],
+    provider: AnalysisProvider,
+    errors: PipelineError[],
+  ): Promise<ThemeItem[]> {
+    const sentimentById = new Map(
+      classified.map((c) => [c.review.id, c.sentiment.score]),
+    );
+    const embed =
+      provider.capabilities.embeddings && provider.embed
+        ? provider.embed.bind(provider)
+        : undefined;
+
+    const items: ThemeItem[] = [];
+    for (const review of reviews) {
+      const item: ThemeItem = { review };
+      const sentiment = sentimentById.get(review.id);
+      if (sentiment !== undefined) item.sentiment = sentiment;
+      if (embed) {
+        try {
+          item.embedding = await embed(review);
+        } catch (err) {
+          errors.push({
+            stage: 'provider',
+            reviewId: review.id,
+            message: `embedding failed: ${errorMessage(err)}`,
+          });
+        }
+      }
+      items.push(item);
+    }
+    return items;
   }
 }
 

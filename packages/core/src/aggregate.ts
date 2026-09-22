@@ -1,6 +1,6 @@
 import type { NormalizedReview } from './schema.js';
 import type { SentimentResult } from './interfaces.js';
-import type { OverallSentiment, Theme, TrendPoint, FlaggedReview } from './result.js';
+import type { OverallSentiment, TrendPoint, FlaggedReview } from './result.js';
 
 /** A review paired with the sentiment a provider scored for it. */
 export interface ClassifiedReview {
@@ -10,12 +10,12 @@ export interface ClassifiedReview {
 
 /**
  * The provider-agnostic portions of an {@link AnalysisResult} that can be
- * derived purely from classified reviews. The pipeline wraps this with
- * schema version, summary, and errors to form the full result.
+ * derived purely from classified reviews. Themes are produced separately by an
+ * optional {@link ThemeExtractor}; the pipeline wraps this with schema version,
+ * themes, summary, and errors to form the full result.
  */
 export interface Aggregation {
   overallSentiment: OverallSentiment;
-  themes: Theme[];
   trend: TrendPoint[];
   flagged: FlaggedReview[];
 }
@@ -35,14 +35,13 @@ const MONTH_PATTERN = /^(\d{4}-\d{2})/;
  * deliberately provider-agnostic — it reads only the {@link SentimentResult}
  * each review carries, never anything model-specific.
  *
- * Themes are returned empty here; theme clustering is layered on separately
- * rather than baked into this pass. Empty input yields a zeroed
- * {@link OverallSentiment} and empty arrays rather than throwing.
+ * Themes are not produced here; they come from an optional theme extractor.
+ * Empty input yields a zeroed {@link OverallSentiment} and empty arrays rather
+ * than throwing.
  */
 export function aggregate(classified: ClassifiedReview[]): Aggregation {
   return {
     overallSentiment: summarizeOverall(classified),
-    themes: [],
     trend: buildTrend(classified),
     flagged: findFlagged(classified),
   };

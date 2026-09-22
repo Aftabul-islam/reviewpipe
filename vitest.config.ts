@@ -14,6 +14,7 @@ export const workspaceAlias: Record<string, string> = {
   '@reviewpipe/adapter-json': pkg('adapter-json'),
   '@reviewpipe/exporter-json': pkg('exporter-json'),
   '@reviewpipe/exporter-csv': pkg('exporter-csv'),
+  '@reviewpipe/clustering': pkg('clustering'),
 };
 
 export default defineConfig({

@@ -11,6 +11,8 @@ export type {
   AnalysisProvider,
   Exporter,
   ExporterOutput,
+  ThemeItem,
+  ThemeExtractor,
 } from './interfaces.js';
 
 export { SCHEMA_VERSION } from './result.js';

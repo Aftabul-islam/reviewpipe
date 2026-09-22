@@ -1,0 +1,30 @@
+{
+  "name": "@reviewpipe/clustering",
+  "version": "0.0.0",
+  "description": "Theme clustering for reviewpipe — groups reviews into labeled themes via embeddings (k-means) or keyword frequency.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -b tsconfig.build.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@reviewpipe/core": "workspace:*",
+    "ml-kmeans": "^6.0.0"
+  },
+  "devDependencies": {
+    "@reviewpipe/provider-lexicon": "workspace:*"
+  },
+  "sideEffects": false
+}

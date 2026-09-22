@@ -74,7 +74,7 @@ export interface FlaggedReview {
 }
 
 /** The pipeline stage an error occurred in. */
-export type PipelineStage = 'adapter' | 'transform' | 'provider' | 'export';
+export type PipelineStage = 'adapter' | 'transform' | 'provider' | 'themes' | 'export';
 
 /**
  * A non-fatal failure recorded during a run. Per-review provider failures

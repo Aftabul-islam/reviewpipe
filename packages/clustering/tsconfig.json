@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "baseUrl": ".",
+    "paths": {
+      "@reviewpipe/core": ["../core/src/index.ts"],
+      "@reviewpipe/provider-lexicon": ["../provider-lexicon/src/index.ts"]
+    }
+  },
+  "include": ["src/**/*"]
+}

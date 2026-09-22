@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { Pipeline } from './pipeline.js';
 import type { NormalizedReview } from './schema.js';
 import type {
@@ -189,5 +189,128 @@ describe('Pipeline', () => {
     await expect(new Pipeline().source(arrayAdapter([])).run(null)).rejects.toThrow(
       /provider/,
     );
+  });
+});
+
+describe('Pipeline — theme extraction', () => {
+  const CAPS_WITH_EMBEDDINGS: ProviderCapabilities = {
+    ...CAPS_SENTIMENT_ONLY,
+    embeddings: true,
+  };
+
+  function embeddingProvider(
+    overrides: Partial<AnalysisProvider> = {},
+  ): AnalysisProvider {
+    return {
+      ...ratingProvider(),
+      capabilities: CAPS_WITH_EMBEDDINGS,
+      embed: (review) => [review.rating ?? 0, review.text.length],
+      ...overrides,
+    };
+  }
+
+  it('leaves themes empty when no extractor is set', async () => {
+    const result = await runToResult(
+      new Pipeline().source(arrayAdapter(reviews())).provider(ratingProvider()),
+      null,
+    );
+    expect(result.themes).toEqual([]);
+  });
+
+  it('feeds the extractor sentiment scores and embeddings, and uses its themes', async () => {
+    let received: { sentiment?: number; embedding?: number[]; id: string }[] = [];
+    const extractor = {
+      extract: (
+        items: { review: NormalizedReview; sentiment?: number; embedding?: number[] }[],
+      ) => {
+        received = items.map((i) => ({
+          id: i.review.id,
+          sentiment: i.sentiment,
+          embedding: i.embedding,
+        }));
+        return [
+          {
+            label: 'all',
+            keywords: ['x'],
+            mentions: items.length,
+            sentiment: 0,
+            exampleReviewIds: items.map((i) => i.review.id),
+          },
+        ];
+      },
+    };
+
+    const result = await runToResult(
+      new Pipeline()
+        .source(arrayAdapter(reviews()))
+        .provider(embeddingProvider())
+        .themes(extractor),
+      null,
+    );
+
+    expect(result.themes).toHaveLength(1);
+    expect(result.themes[0]?.mentions).toBe(3);
+    expect(received.every((i) => typeof i.sentiment === 'number')).toBe(true);
+    expect(received.every((i) => Array.isArray(i.embedding))).toBe(true);
+  });
+
+  it('records a per-review error when embedding fails, without aborting', async () => {
+    const provider = embeddingProvider({
+      embed: (review) => {
+        if (review.id === 'b') throw new Error('embed boom');
+        return [1, 2];
+      },
+    });
+    const captured: (number[] | undefined)[] = [];
+    const extractor = {
+      extract: (items: { embedding?: number[] }[]) => {
+        for (const item of items) captured.push(item.embedding);
+        return [];
+      },
+    };
+
+    const result = await runToResult(
+      new Pipeline().source(arrayAdapter(reviews())).provider(provider).themes(extractor),
+      null,
+    );
+
+    expect(result.errors).toContainEqual({
+      stage: 'provider',
+      reviewId: 'b',
+      message: 'embedding failed: embed boom',
+    });
+    expect(captured.filter((e) => e === undefined)).toHaveLength(1);
+  });
+
+  it('records a non-fatal error when the extractor throws', async () => {
+    const extractor = {
+      extract: () => {
+        throw new Error('cluster boom');
+      },
+    };
+
+    const result = await runToResult(
+      new Pipeline()
+        .source(arrayAdapter(reviews()))
+        .provider(ratingProvider())
+        .themes(extractor),
+      null,
+    );
+
+    expect(result.themes).toEqual([]);
+    expect(result.errors[0]).toMatchObject({ stage: 'themes' });
+    expect(result.errors[0]?.message).toContain('cluster boom');
+  });
+
+  it('does not embed when the provider lacks the embeddings capability', async () => {
+    const embed = vi.fn(() => [1, 2]);
+    const provider = ratingProvider({ embed });
+    const extractor = { extract: () => [] };
+
+    await runToResult(
+      new Pipeline().source(arrayAdapter(reviews())).provider(provider).themes(extractor),
+      null,
+    );
+    expect(embed).not.toHaveBeenCalled();
   });
 });

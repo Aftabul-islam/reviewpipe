@@ -92,6 +92,12 @@ importers:
         specifier: workspace:*
         version: link:../provider-lexicon
 
+  packages/provider-huggingface:
+    dependencies:
+      '@reviewpipe/core':
+        specifier: workspace:*
+        version: link:../core
+
   packages/provider-lexicon:
     dependencies:
       '@reviewpipe/core':

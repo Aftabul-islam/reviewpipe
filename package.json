@@ -6,7 +6,7 @@
   "description": "Pipeline framework for analyzing e-commerce customer reviews",
   "scripts": {
     "test": "vitest run",
-    "typecheck": "tsc -b --noEmit",
+    "typecheck": "tsc --noEmit",
     "lint": "eslint . --ext .ts",
     "data:download": "bash scripts/download-datasets.sh",
     "benchmark": "pnpm --filter ./packages/benchmarks run benchmark"

@@ -1,4 +1,11 @@
 {
-  "files": [],
-  "references": [{ "path": "packages/core" }]
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@reviewpipe/core": ["packages/core/src/index.ts"]
+    }
+  },
+  "include": ["packages/*/src/**/*"]
 }

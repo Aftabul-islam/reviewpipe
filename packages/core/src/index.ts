@@ -1,3 +1,5 @@
+export { Pipeline } from './pipeline.js';
+
 export type { NormalizedReview } from './schema.js';
 
 export type {

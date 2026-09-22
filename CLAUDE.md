@@ -115,6 +115,8 @@ add more prose around it.
 - `pnpm benchmark` — run the Phase 11 benchmark suite against `data/raw/`
 
 ## Current status
-Phase 1 done — `packages/core` holds the schema, the four interfaces, and the
-`AnalysisResult` type (types only, no engine yet). Next: Phase 2, the pipeline
-engine + aggregation. See `docs/DEV_GUIDE.md`.
+Phase 2 done — `packages/core` has the schema, the four interfaces, the
+`AnalysisResult` type, plus the `Pipeline` engine (`src/pipeline.ts`) and
+provider-agnostic `aggregate()` (`src/aggregate.ts`) with per-review failure
+handling. Next: Phase 3, the zero-dependency lexicon provider. See
+`docs/DEV_GUIDE.md`.

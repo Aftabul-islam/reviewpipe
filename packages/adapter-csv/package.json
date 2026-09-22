@@ -1,0 +1,27 @@
+{
+  "name": "@reviewpipe/adapter-csv",
+  "version": "0.0.0",
+  "description": "CSV source adapter for reviewpipe — turns CSV text into NormalizedReview[].",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -b tsconfig.build.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@reviewpipe/core": "workspace:*",
+    "csv-parse": "^5.5.6"
+  },
+  "sideEffects": false
+}

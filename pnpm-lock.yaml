@@ -92,6 +92,12 @@ importers:
         specifier: workspace:*
         version: link:../provider-lexicon
 
+  packages/provider-anthropic:
+    dependencies:
+      '@reviewpipe/core':
+        specifier: workspace:*
+        version: link:../core
+
   packages/provider-huggingface:
     dependencies:
       '@reviewpipe/core':
@@ -105,6 +111,12 @@ importers:
         version: link:../core
 
   packages/provider-local:
+    dependencies:
+      '@reviewpipe/core':
+        specifier: workspace:*
+        version: link:../core
+
+  packages/provider-openai:
     dependencies:
       '@reviewpipe/core':
         specifier: workspace:*

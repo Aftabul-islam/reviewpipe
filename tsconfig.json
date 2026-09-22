@@ -8,6 +8,8 @@
       "@reviewpipe/provider-lexicon": ["packages/provider-lexicon/src/index.ts"],
       "@reviewpipe/provider-local": ["packages/provider-local/src/index.ts"],
       "@reviewpipe/provider-huggingface": ["packages/provider-huggingface/src/index.ts"],
+      "@reviewpipe/provider-openai": ["packages/provider-openai/src/index.ts"],
+      "@reviewpipe/provider-anthropic": ["packages/provider-anthropic/src/index.ts"],
       "@reviewpipe/adapter-csv": ["packages/adapter-csv/src/index.ts"],
       "@reviewpipe/adapter-json": ["packages/adapter-json/src/index.ts"],
       "@reviewpipe/exporter-json": ["packages/exporter-json/src/index.ts"],

@@ -11,6 +11,8 @@ export const workspaceAlias: Record<string, string> = {
   '@reviewpipe/provider-lexicon': pkg('provider-lexicon'),
   '@reviewpipe/provider-local': pkg('provider-local'),
   '@reviewpipe/provider-huggingface': pkg('provider-huggingface'),
+  '@reviewpipe/provider-openai': pkg('provider-openai'),
+  '@reviewpipe/provider-anthropic': pkg('provider-anthropic'),
   '@reviewpipe/adapter-csv': pkg('adapter-csv'),
   '@reviewpipe/adapter-json': pkg('adapter-json'),
   '@reviewpipe/exporter-json': pkg('exporter-json'),

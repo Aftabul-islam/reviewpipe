@@ -115,18 +115,23 @@ add more prose around it.
 - `pnpm benchmark` — run the Phase 11 benchmark suite against `data/raw/`
 
 ## Current status
-Phase 4 done. `packages/core` has the schema, the four interfaces, the
-`AnalysisResult` type, the `Pipeline` engine, and provider-agnostic
-`aggregate()`. `packages/provider-lexicon` adds the zero-dependency
-`LexiconProvider` (bundled AFINN sentiment), plus `scoreSentiment` and a
-TF-IDF `extractKeywords`. `packages/adapter-csv` (`CsvAdapter`, uses csv-parse)
-and `packages/adapter-json` (`FieldMapAdapter`, field→dot-path mapping) turn
-raw input into `NormalizedReview[]`. Next: Phase 5, JSON + CSV exporters. See
-`docs/DEV_GUIDE.md`.
+Phase 5 done — input→output loop closed (CSV in → lexicon → CSV/JSON out).
+`packages/core` has the schema, the four interfaces, the `AnalysisResult` type,
+the `Pipeline` engine, and provider-agnostic `aggregate()`.
+`packages/provider-lexicon` has the zero-dependency `LexiconProvider` (bundled
+AFINN sentiment), `scoreSentiment`, and TF-IDF `extractKeywords`.
+`packages/adapter-csv` (`CsvAdapter`, uses csv-parse) and
+`packages/adapter-json` (`FieldMapAdapter`) turn raw input into
+`NormalizedReview[]`. `packages/exporter-json` (`JsonExporter`, lossless) and
+`packages/exporter-csv` (`CsvExporter`, flat themes+trend table, uses
+csv-stringify) serialize the result. Next: Phase 6, local transformers.js
+provider (Tier 0). See `docs/DEV_GUIDE.md`.
 
 Cross-package imports resolve to source, build-free: `pnpm -w typecheck` runs
-`tsc --noEmit` off the root `tsconfig.json` (a `paths` map to each package's
-`src`), and `pnpm -w test` uses `vitest.config.ts` aliases. `composite` lives
-in per-package `tsconfig.build.json` (build/publish only). CI runs lint +
-typecheck + test, no build step. Add a new package → give it a
-`tsconfig.json` with a `paths` entry and extend the root `paths`/vitest alias.
+`tsc --noEmit` off the root `tsconfig.json` (a `paths` map listing every
+package's `src`), and `pnpm -w test` uses `vitest.config.ts` aliases (same
+list). `composite` lives in per-package `tsconfig.build.json` (build/publish
+only). eslint globally ignores `**/*.config.ts`. CI runs lint + typecheck +
+test, no build step. **Adding a package:** give it a `tsconfig.json` with
+`paths` entries for whatever it imports, and add one line to both the root
+`tsconfig.json` `paths` and the `vitest.config.ts` alias list.

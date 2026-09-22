@@ -115,8 +115,16 @@ add more prose around it.
 - `pnpm benchmark` — run the Phase 11 benchmark suite against `data/raw/`
 
 ## Current status
-Phase 2 done — `packages/core` has the schema, the four interfaces, the
-`AnalysisResult` type, plus the `Pipeline` engine (`src/pipeline.ts`) and
-provider-agnostic `aggregate()` (`src/aggregate.ts`) with per-review failure
-handling. Next: Phase 3, the zero-dependency lexicon provider. See
+Phase 3 done. `packages/core` has the schema, the four interfaces, the
+`AnalysisResult` type, the `Pipeline` engine, and provider-agnostic
+`aggregate()`. `packages/provider-lexicon` adds the zero-dependency
+`LexiconProvider` (bundled AFINN sentiment), plus `scoreSentiment` and a
+TF-IDF `extractKeywords`. Next: Phase 4, CSV + JSON adapters. See
 `docs/DEV_GUIDE.md`.
+
+Cross-package imports resolve to source, build-free: `pnpm -w typecheck` runs
+`tsc --noEmit` off the root `tsconfig.json` (a `paths` map to each package's
+`src`), and `pnpm -w test` uses `vitest.config.ts` aliases. `composite` lives
+in per-package `tsconfig.build.json` (build/publish only). CI runs lint +
+typecheck + test, no build step. Add a new package → give it a
+`tsconfig.json` with a `paths` entry and extend the root `paths`/vitest alias.

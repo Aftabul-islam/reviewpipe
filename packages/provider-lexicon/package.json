@@ -1,0 +1,26 @@
+{
+  "name": "@reviewpipe/provider-lexicon",
+  "version": "0.0.0",
+  "description": "Zero-dependency lexicon (AFINN) sentiment provider and TF-IDF keyword extraction for reviewpipe.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -b tsconfig.build.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@reviewpipe/core": "workspace:*"
+  },
+  "sideEffects": false
+}

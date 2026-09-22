@@ -1,0 +1,26 @@
+id,text,rating,date,author,productId,source
+f001,"Absolutely love this product, exceeded my expectations in every way!",5,2026-01-05,jenna_k,SKU-1001,fixture
+f002,"This is the worst purchase I have ever made. Complete waste of money.",1,2026-01-06,marcus_t,SKU-1002,fixture
+f003,"It's fine. Does what it says, nothing special.",3,2026-01-07,unknown_user,SKU-1001,fixture
+f004,"Great quality but shipping took way longer than promised.",4,2026-01-08,priya_s,SKU-1003,fixture
+f005,"Terrible customer service when I tried to return this.",2,2026-01-09,dave_h,SKU-1002,fixture
+f006,"Perfect fit, great material, will buy again.",5,2026-01-10,lena_w,SKU-1004,fixture
+f007,"Arrived broken. Packaging was inadequate for a fragile item.",1,2026-01-10,carlos_m,SKU-1005,fixture
+f008,"",3,2026-01-11,anon_1,SKU-1001,fixture
+f009,"Meh",3,2026-01-11,anon_2,SKU-1006,fixture
+f010,"I was skeptical at first because of some of the mixed reviews I read online before purchasing, but after using this every day for about three weeks now I can honestly say it has completely changed my morning routine for the better, and I no longer dread getting ready in the mornings the way I used to before I found this product.",5,2026-01-12,detailed_reviewer,SKU-1001,fixture
+f011,"Five stars! Though honestly it stopped working after two days and support never responded.",5,2026-01-12,ryan_b,SKU-1007,fixture
+f012,"Shipping was fast and the packaging was excellent, very happy with the whole experience.",5,2026-01-13,sofia_r,SKU-1003,fixture
+f013,"Shipping was fast and the packaging was great, very happy with the whole experience.",5,2026-01-13,sofia_r,SKU-1003,fixture
+f014,"Quality has really gone downhill compared to when I first bought this brand two years ago.",2,2026-01-14,longtime_customer,SKU-1004,fixture
+f015,"Not bad for the price, wouldn't pay full retail for it though.",3,2026-01-14,budget_buyer,SKU-1002,fixture
+f016,"Customer support was incredibly helpful and resolved my issue within minutes.",5,2026-01-15,helped_out,SKU-1005,fixture
+f017,"Item description did not match what actually arrived, quite disappointed.",2,2026-01-15,mismatch_mike,SKU-1006,fixture
+f018,"Works exactly as advertised, no complaints at all.",4,2026-01-16,steady_eddie,SKU-1007,fixture
+f019,"The color was slightly different from the photos but overall still happy with it.",4,2026-01-16,color_conscious,SKU-1001,fixture
+f020,"Do not buy this. Save your money and look elsewhere.",1,2026-01-17,warning_wendy,SKU-1002,fixture
+f021,"Decent product, decent price, no regrets.",4,2026-01-17,neutral_nate,SKU-1003,fixture
+f022,"This product changed my life for the better in every conceivable way honestly.",5,2026-01-18,super_fan,SKU-1004,fixture
+f023,"Package arrived on time but the item itself feels cheaply made.",2,2026-01-18,quality_checker,SKU-1005,fixture
+f024,"Good value overall, though the instructions could be clearer.",4,2026-01-19,practical_pat,SKU-1006,fixture
+f025,"N/A",,2026-01-19,missing_rating,SKU-1007,fixture

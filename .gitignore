@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# Env / secrets
+.env
+.env.local
+.env.*.local
+
+# Local-only working docs (see CLAUDE.md — this stays on disk, not in git)
+docs/DEV_GUIDE.md
+
+# Real downloaded datasets — regenerate via scripts/download-datasets.sh
+data/raw/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Test/coverage artifacts
+coverage/
+.vitest/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*

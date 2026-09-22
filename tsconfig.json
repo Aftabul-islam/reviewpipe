@@ -14,6 +14,7 @@
       "@reviewpipe/adapter-json": ["packages/adapter-json/src/index.ts"],
       "@reviewpipe/exporter-json": ["packages/exporter-json/src/index.ts"],
       "@reviewpipe/exporter-csv": ["packages/exporter-csv/src/index.ts"],
+      "@reviewpipe/exporter-html": ["packages/exporter-html/src/index.ts"],
       "@reviewpipe/clustering": ["packages/clustering/src/index.ts"]
     }
   },

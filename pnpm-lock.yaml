@@ -79,6 +79,19 @@ importers:
         specifier: ^5.5.6
         version: 5.6.0
 
+  packages/exporter-html:
+    dependencies:
+      '@reviewpipe/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@reviewpipe/adapter-csv':
+        specifier: workspace:*
+        version: link:../adapter-csv
+      '@reviewpipe/provider-lexicon':
+        specifier: workspace:*
+        version: link:../provider-lexicon
+
   packages/exporter-json:
     dependencies:
       '@reviewpipe/core':

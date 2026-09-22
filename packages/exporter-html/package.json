@@ -1,0 +1,31 @@
+{
+  "name": "@reviewpipe/exporter-html",
+  "version": "0.0.0",
+  "description": "HTML dashboard exporter for reviewpipe — a self-contained report with inline SVG charts.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -b tsconfig.build.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@reviewpipe/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@reviewpipe/adapter-csv": "workspace:*",
+    "@reviewpipe/provider-lexicon": "workspace:*"
+  },
+  "sideEffects": false
+}

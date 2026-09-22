@@ -47,6 +47,38 @@ importers:
 
   packages/core: {}
 
+  packages/exporter-csv:
+    dependencies:
+      '@reviewpipe/core':
+        specifier: workspace:*
+        version: link:../core
+      csv-stringify:
+        specifier: ^6.5.2
+        version: 6.8.3
+    devDependencies:
+      '@reviewpipe/adapter-csv':
+        specifier: workspace:*
+        version: link:../adapter-csv
+      '@reviewpipe/provider-lexicon':
+        specifier: workspace:*
+        version: link:../provider-lexicon
+      csv-parse:
+        specifier: ^5.5.6
+        version: 5.6.0
+
+  packages/exporter-json:
+    dependencies:
+      '@reviewpipe/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@reviewpipe/adapter-csv':
+        specifier: workspace:*
+        version: link:../adapter-csv
+      '@reviewpipe/provider-lexicon':
+        specifier: workspace:*
+        version: link:../provider-lexicon
+
   packages/provider-lexicon:
     dependencies:
       '@reviewpipe/core':
@@ -556,6 +588,9 @@ packages:
 
   csv-parse@5.6.0:
     resolution: {integrity: sha512-l3nz3euub2QMg5ouu5U09Ew9Wf6/wQ8I++ch1loQ0ljmzhmfZYrH9fflS22i/PQEvsPvxCwxgz5q7UB8K1JO4Q==}
+
+  csv-stringify@6.8.3:
+    resolution: {integrity: sha512-gIeSCvq5F4VtXV3naV3VAewLhBkiZBz+PPhTOA8H3Y8h/ELa+R1ml0GZck/4/Nzo9ep2lvOluilJ6MJlbZsKMA==}
 
   debug@4.4.3:
     resolution: {integrity: sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==}
@@ -1407,6 +1442,8 @@ snapshots:
       which: 2.0.2
 
   csv-parse@5.6.0: {}
+
+  csv-stringify@6.8.3: {}
 
   debug@4.4.3:
     dependencies:

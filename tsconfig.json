@@ -4,7 +4,12 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "@reviewpipe/core": ["packages/core/src/index.ts"]
+      "@reviewpipe/core": ["packages/core/src/index.ts"],
+      "@reviewpipe/provider-lexicon": ["packages/provider-lexicon/src/index.ts"],
+      "@reviewpipe/adapter-csv": ["packages/adapter-csv/src/index.ts"],
+      "@reviewpipe/adapter-json": ["packages/adapter-json/src/index.ts"],
+      "@reviewpipe/exporter-json": ["packages/exporter-json/src/index.ts"],
+      "@reviewpipe/exporter-csv": ["packages/exporter-csv/src/index.ts"]
     }
   },
   "include": ["packages/*/src/**/*"]

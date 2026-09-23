@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>reviewpipe — tutorials</title>
+    <meta name="description" content="Step-by-step reviewpipe tutorials for every provider tier — lexicon, local, Hugging Face, OpenAI, and Anthropic — plus practical recipes." />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='4' fill='%230e7490'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="./assets/docs.css" />
+  </head>
+  <body>
+    <header class="header">
+      <button id="menu-btn" class="icon-btn" aria-label="Toggle navigation">☰</button>
+      <a class="brand" href="./index.html"><span class="dot"></span> reviewpipe</a>
+      <span class="spacer"></span>
+      <nav>
+        <a href="./index.html">Docs</a>
+        <a class="hide-sm" href="#choose">Choose a tier</a>
+        <a href="https://github.com/Aftabul-islam/reviewpipe">GitHub</a>
+      </nav>
+      <button id="theme-btn" class="icon-btn" aria-label="Toggle theme">☾</button>
+    </header>
+
+    <div class="scrim"></div>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="group">
+          <p class="group-title">Start here</p>
+          <a href="#intro">Introduction</a>
+          <a href="#choose">Choose a tier</a>
+        </div>
+        <div class="group">
+          <p class="group-title">Tutorials by tier</p>
+          <a href="#lexicon">Lexicon · Tier -1</a>
+          <a href="#local">Local · Tier 0</a>
+          <a href="#huggingface">Hugging Face · Tier 1</a>
+          <a href="#openai">OpenAI · Tier 2</a>
+          <a href="#anthropic">Anthropic · Tier 2</a>
+        </div>
+        <div class="group">
+          <p class="group-title">Recipes</p>
+          <a href="#input">CSV &amp; JSON input</a>
+          <a href="#export">Export JSON / CSV / HTML</a>
+          <a href="#themes">Theme clustering</a>
+          <a href="#transform">Custom transformer</a>
+          <a href="#errors">Handling errors</a>
+        </div>
+      </aside>
+
+      <main class="content">
+        <section id="intro">
+          <span class="eyebrow">Tutorials</span>
+          <h1>Learn reviewpipe by building</h1>
+          <p class="lead">
+            Each tutorial is a short, runnable walkthrough. Start with the lexicon tier (no API
+            key, no downloads), then move up a tier whenever you want more accuracy, embeddings,
+            or summaries — the code barely changes.
+          </p>
+          <p>Every tutorial follows the same shape: install → write a few lines → run → read the result. The one line that changes between tiers is <code>.provider(...)</code>.</p>
+          <p>New to the concepts (the <code>Pipeline</code>, <code>NormalizedReview</code>, <code>AnalysisResult</code>)? Skim the <a href="./index.html">documentation</a> first — these tutorials assume you've seen them.</p>
+
+          <div class="callout note">
+            <p class="label">Prerequisites</p>
+            <p>Node 20+ and a package manager. Examples use TypeScript run with <code>npx tsx file.ts</code>; plain JavaScript works too (<code>node file.js</code>) — reviewpipe ships as ESM.</p>
+          </div>
+          <div class="callout warn">
+            <p class="label">Pre-release</p>
+            <p>Until the packages are on npm, install reviewpipe from the repository (clone + <code>pnpm install</code>). The import paths below are the intended published names.</p>
+          </div>
+        </section>
+
+        <section id="choose">
+          <h2>Choose a tier</h2>
+          <p>All tiers implement the same interface, so you can start low and upgrade with a one-line change. Pick by your constraints:</p>
+          <div class="cards">
+            <div class="card"><h3><a href="#lexicon">Lexicon · Tier -1</a></h3><p>Offline, no key, instant. A fast sentiment baseline (~70% on real data).</p></div>
+            <div class="card"><h3><a href="#local">Local · Tier 0</a></h3><p>On-device ML model. Adds embeddings (for clustering). No key; one-time model download.</p></div>
+            <div class="card"><h3><a href="#huggingface">Hugging Face · Tier 1</a></h3><p>Hosted models over your HF token. Adds summaries.</p></div>
+            <div class="card"><h3><a href="#openai">OpenAI · Tier 2</a></h3><p>Frontier quality. Sentiment, embeddings, and summaries. BYO key.</p></div>
+            <div class="card"><h3><a href="#anthropic">Anthropic · Tier 2</a></h3><p>Frontier quality with Claude. Sentiment and summaries (no embeddings). BYO key.</p></div>
+          </div>
+          <div class="callout tip">
+            <p class="label">Rule of thumb</p>
+            <p>Prototype on <strong>lexicon</strong> (free, offline). Need embeddings/clustering without a key? Use <strong>local</strong>. Want summaries and higher accuracy? Move to a hosted or frontier tier. The paid tiers call the API once per review — great for modest batches, not tens of thousands of rows.</p>
+          </div>
+        </section>
+
+        <section id="lexicon">
+          <h2>Lexicon · Tier -1 (offline, no key)</h2>
+          <p><strong>What you'll build:</strong> overall sentiment, a monthly trend, and flagged reviews from a CSV — fully offline.</p>
+          <ol class="steps">
+            <li>
+              <strong>Install</strong>
+              <pre><code>npm install @reviewpipe/core @reviewpipe/adapter-csv @reviewpipe/provider-lexicon</code></pre>
+            </li>
+            <li>
+              <strong>Create <code>reviews.csv</code></strong> (only <code>text</code> is required)
+              <pre><code>id,text,rating,date
+1,"Love this jacket, perfect fit and premium material",5,2026-01-04
+2,"Shipping took two weeks longer than promised",2,2026-01-06
+3,"It's fine, nothing special",3,2026-01-12</code></pre>
+            </li>
+            <li>
+              <strong>Write <code>analyze.ts</code></strong>
+              <pre><code><span class="tok-k">import</span> { readFileSync } <span class="tok-k">from</span> <span class="tok-s">'node:fs'</span>;
+<span class="tok-k">import</span> { Pipeline } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/core'</span>;
+<span class="tok-k">import</span> { CsvAdapter } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/adapter-csv'</span>;
+<span class="tok-k">import</span> { LexiconProvider } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/provider-lexicon'</span>;
+
+<span class="tok-k">const</span> result = <span class="tok-k">await</span> <span class="tok-k">new</span> Pipeline()
+  .source(<span class="tok-k">new</span> CsvAdapter())
+  .provider(<span class="tok-k">new</span> LexiconProvider())
+  .run(readFileSync(<span class="tok-s">'reviews.csv'</span>, <span class="tok-s">'utf8'</span>));
+
+console.log(result.overallSentiment);
+console.log(result.flagged);</code></pre>
+            </li>
+            <li>
+              <strong>Run it</strong>
+              <pre><code>npx tsx analyze.ts</code></pre>
+            </li>
+            <li>
+              <strong>Read the result</strong> — <code>overallSentiment</code> has label counts and a mean score in <code>[-1, 1]</code>; <code>trend</code> has average sentiment per month; <code>flagged</code> lists rating/text mismatches and strongly-negative reviews.
+            </li>
+          </ol>
+          <div class="callout note"><p class="label">Capabilities</p><p><code>sentiment: true</code> · everything else false. No embeddings and no summaries — add a theme extractor for keyword-based themes, or move up a tier.</p></div>
+          <p><strong>When to use:</strong> prototyping, privacy-sensitive data, or high volume — it processes tens of thousands of reviews per second offline. Accuracy is a modest ~70% on messy real-world text.</p>
+        </section>
+
+        <section id="local">
+          <h2>Local · Tier 0 (on-device ML, no key)</h2>
+          <p><strong>What you'll build:</strong> the same analysis, but with a real sentiment model <em>and</em> embeddings — which unlocks embedding-based theme clustering — all on your machine.</p>
+          <ol class="steps">
+            <li>
+              <strong>Install</strong> (the model library is an optional peer dependency)
+              <pre><code>npm install @reviewpipe/core @reviewpipe/adapter-csv \
+  @reviewpipe/provider-local @reviewpipe/clustering @xenova/transformers</code></pre>
+            </li>
+            <li>
+              <strong>Write the pipeline</strong>
+              <pre><code><span class="tok-k">import</span> { readFileSync } <span class="tok-k">from</span> <span class="tok-s">'node:fs'</span>;
+<span class="tok-k">import</span> { Pipeline } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/core'</span>;
+<span class="tok-k">import</span> { CsvAdapter } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/adapter-csv'</span>;
+<span class="tok-k">import</span> { LocalProvider } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/provider-local'</span>;
+<span class="tok-k">import</span> { ClusteringThemeExtractor } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/clustering'</span>;
+
+<span class="tok-k">const</span> result = <span class="tok-k">await</span> <span class="tok-k">new</span> Pipeline()
+  .source(<span class="tok-k">new</span> CsvAdapter())
+  .provider(<span class="tok-k">new</span> LocalProvider())          <span class="tok-c">// on-device sentiment + embeddings</span>
+  .themes(<span class="tok-k">new</span> ClusteringThemeExtractor())  <span class="tok-c">// k-means over the embeddings</span>
+  .run(readFileSync(<span class="tok-s">'reviews.csv'</span>, <span class="tok-s">'utf8'</span>));
+
+console.log(result.themes); <span class="tok-c">// labeled clusters with mention counts</span></code></pre>
+            </li>
+            <li><strong>Run it</strong> — <code>npx tsx analyze.ts</code>. The first run downloads the model (cached afterwards; offline from then on).</li>
+          </ol>
+          <div class="callout note"><p class="label">Capabilities</p><p><code>sentiment: true</code>, <code>embeddings: true</code>. Because embeddings are available, the clusterer uses k-means for higher-quality themes than the keyword fallback.</p></div>
+          <p><strong>When to use:</strong> you want better sentiment and real theme clustering without sending data to a third party or managing an API key.</p>
+        </section>
+
+        <section id="huggingface">
+          <h2>Hugging Face · Tier 1 (hosted, bring a token)</h2>
+          <p><strong>What you'll build:</strong> hosted sentiment and embeddings, plus a narrative <em>summary</em> of all the reviews.</p>
+          <ol class="steps">
+            <li><strong>Install</strong><pre><code>npm install @reviewpipe/core @reviewpipe/adapter-csv @reviewpipe/provider-huggingface</code></pre></li>
+            <li><strong>Get a token</strong> from your Hugging Face account and export it: <pre><code>export HF_TOKEN=hf_...</code></pre></li>
+            <li>
+              <strong>Write the pipeline</strong>
+              <pre><code><span class="tok-k">import</span> { Pipeline } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/core'</span>;
+<span class="tok-k">import</span> { CsvAdapter } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/adapter-csv'</span>;
+<span class="tok-k">import</span> { HuggingFaceProvider } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/provider-huggingface'</span>;
+
+<span class="tok-k">const</span> provider = <span class="tok-k">new</span> HuggingFaceProvider({
+  apiKey: process.env.HF_TOKEN!,
+  batchSize: 20,      <span class="tok-c">// pause after N requests…</span>
+  batchDelayMs: 1000, <span class="tok-c">// …to respect free-tier rate limits</span>
+});
+
+<span class="tok-k">const</span> result = <span class="tok-k">await</span> <span class="tok-k">new</span> Pipeline().source(<span class="tok-k">new</span> CsvAdapter()).provider(provider).run(csv);
+console.log(result.summary);</code></pre>
+            </li>
+            <li><strong>Run it</strong> — <code>npx tsx analyze.ts</code>.</li>
+          </ol>
+          <div class="callout note"><p class="label">Capabilities</p><p><code>sentiment</code>, <code>embeddings</code>, and <code>summarization</code> all true. It retries <code>429</code>/<code>503</code> with exponential backoff automatically.</p></div>
+          <p><strong>When to use:</strong> you want summaries and hosted models without a heavy SDK, and you're comfortable sending data to Hugging Face.</p>
+        </section>
+
+        <section id="openai">
+          <h2>OpenAI · Tier 2 (frontier, bring a key)</h2>
+          <p><strong>What you'll build:</strong> frontier-quality sentiment, embeddings, and summaries — with a custom summary prompt.</p>
+          <ol class="steps">
+            <li><strong>Install</strong> (the SDK is an optional peer dependency)<pre><code>npm install @reviewpipe/core @reviewpipe/adapter-csv @reviewpipe/provider-openai openai</code></pre></li>
+            <li><strong>Set your key</strong><pre><code>export OPENAI_API_KEY=sk-...</code></pre></li>
+            <li>
+              <strong>Write the pipeline</strong> (with a prompt override)
+              <pre><code><span class="tok-k">import</span> { Pipeline } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/core'</span>;
+<span class="tok-k">import</span> { CsvAdapter } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/adapter-csv'</span>;
+<span class="tok-k">import</span> { OpenAIProvider } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/provider-openai'</span>;
+
+<span class="tok-k">const</span> provider = <span class="tok-k">new</span> OpenAIProvider({
+  apiKey: process.env.OPENAI_API_KEY!,
+  promptOverride: <span class="tok-s">'Summarize these reviews for a product manager in 3 bullet points.'</span>,
+});
+
+<span class="tok-k">const</span> result = <span class="tok-k">await</span> <span class="tok-k">new</span> Pipeline().source(<span class="tok-k">new</span> CsvAdapter()).provider(provider).run(csv);
+console.log(result.summary);</code></pre>
+            </li>
+            <li><strong>Run it</strong> — <code>npx tsx analyze.ts</code>.</li>
+          </ol>
+          <div class="callout note"><p class="label">Capabilities</p><p>All four true, including <code>customPrompts</code>. The default summary prompt is exported as <code>SUMMARY_PROMPT</code> if you want to inspect or extend it.</p></div>
+          <p><strong>When to use:</strong> highest accuracy and rich summaries, and you want embeddings from the same provider for clustering.</p>
+        </section>
+
+        <section id="anthropic">
+          <h2>Anthropic · Tier 2 (Claude, bring a key)</h2>
+          <p><strong>What you'll build:</strong> frontier sentiment and summaries with Claude. (Anthropic has no embeddings endpoint — use the OpenAI or local tier if you need embedding-based clustering.)</p>
+          <ol class="steps">
+            <li><strong>Install</strong><pre><code>npm install @reviewpipe/core @reviewpipe/adapter-csv @reviewpipe/provider-anthropic @anthropic-ai/sdk</code></pre></li>
+            <li><strong>Set your key</strong><pre><code>export ANTHROPIC_API_KEY=sk-ant-...</code></pre></li>
+            <li>
+              <strong>Write the pipeline</strong>
+              <pre><code><span class="tok-k">import</span> { Pipeline } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/core'</span>;
+<span class="tok-k">import</span> { CsvAdapter } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/adapter-csv'</span>;
+<span class="tok-k">import</span> { AnthropicProvider } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/provider-anthropic'</span>;
+
+<span class="tok-k">const</span> provider = <span class="tok-k">new</span> AnthropicProvider({ apiKey: process.env.ANTHROPIC_API_KEY! });
+
+<span class="tok-k">const</span> result = <span class="tok-k">await</span> <span class="tok-k">new</span> Pipeline().source(<span class="tok-k">new</span> CsvAdapter()).provider(provider).run(csv);
+console.log(result.overallSentiment, result.summary);</code></pre>
+            </li>
+            <li><strong>Run it</strong> — <code>npx tsx analyze.ts</code>.</li>
+          </ol>
+          <div class="callout note"><p class="label">Capabilities</p><p><code>sentiment</code>, <code>summarization</code>, and <code>customPrompts</code> true; <code>embeddings: false</code>. Model defaults to a current Claude model; override via the <code>model</code> option.</p></div>
+          <p><strong>When to use:</strong> you prefer Claude for sentiment and summaries. For clustering, pair it with the local or OpenAI tier's embeddings.</p>
+        </section>
+
+        <section id="input">
+          <h2>Recipe: CSV &amp; JSON input</h2>
+          <p>Remap CSV columns to the schema:</p>
+          <pre><code><span class="tok-k">new</span> CsvAdapter({ columns: { text: <span class="tok-s">'review_body'</span>, rating: <span class="tok-s">'stars'</span> }, source: <span class="tok-s">'amazon'</span> });</code></pre>
+          <p>Map arbitrary JSON via dot-paths (a numeric segment indexes an array), with an optional path to a nested records array:</p>
+          <pre><code><span class="tok-k">import</span> { FieldMapAdapter } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/adapter-json'</span>;
+
+<span class="tok-k">new</span> FieldMapAdapter(
+  { text: <span class="tok-s">'review_body'</span>, rating: <span class="tok-s">'stars'</span>, productId: <span class="tok-s">'product.id'</span> },
+  { recordsPath: <span class="tok-s">'data.reviews'</span> },
+);</code></pre>
+        </section>
+
+        <section id="export">
+          <h2>Recipe: export to JSON / CSV / HTML</h2>
+          <p>Add <code>.export(...)</code> and <code>run()</code> returns serialized output instead of the result object:</p>
+          <pre><code><span class="tok-k">import</span> { JsonExporter } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/exporter-json'</span>;
+<span class="tok-k">import</span> { CsvExporter } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/exporter-csv'</span>;
+<span class="tok-k">import</span> { HtmlExporter } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/exporter-html'</span>;
+
+<span class="tok-k">const</span> html = <span class="tok-k">await</span> pipeline.export(<span class="tok-k">new</span> HtmlExporter({ title: <span class="tok-s">'Q1 reviews'</span> })).run(csv);
+writeFileSync(<span class="tok-s">'report.html'</span>, html); <span class="tok-c">// self-contained dashboard, opens in a browser</span></code></pre>
+          <p>Or keep the result and serialize it directly: <code>new JsonExporter().export(result)</code> / <code>new CsvExporter().export(result)</code>.</p>
+        </section>
+
+        <section id="themes">
+          <h2>Recipe: theme clustering</h2>
+          <p>Add a theme extractor to populate <code>result.themes</code>. With an embeddings-capable provider it uses k-means; otherwise it falls back to keyword frequency (rougher, but works with any provider):</p>
+          <pre><code><span class="tok-k">import</span> { ClusteringThemeExtractor } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/clustering'</span>;
+
+<span class="tok-k">await</span> <span class="tok-k">new</span> Pipeline()
+  .source(adapter)
+  .provider(<span class="tok-k">new</span> LocalProvider())               <span class="tok-c">// embeddings → better themes</span>
+  .themes(<span class="tok-k">new</span> ClusteringThemeExtractor({ k: 6 }))
+  .run(csv);</code></pre>
+          <div class="callout tip"><p class="label">Tip</p><p>Keyword-fallback themes (when the provider has no embeddings) surface frequent words and can be noisy. Use the local or OpenAI tier for embedding-based themes.</p></div>
+        </section>
+
+        <section id="transform">
+          <h2>Recipe: a custom transformer</h2>
+          <p>Transformers rewrite the review set before analysis. Implement the one-method interface and chain <code>.use(...)</code>:</p>
+          <pre><code><span class="tok-k">import type</span> { Transformer } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/core'</span>;
+
+<span class="tok-k">const</span> dropShort: Transformer = {
+  transform: (reviews) =&gt; reviews.filter((r) =&gt; r.text.trim().length &gt; 10),
+};
+
+<span class="tok-k">new</span> Pipeline().source(adapter).use(dropShort).provider(provider);</code></pre>
+        </section>
+
+        <section id="errors">
+          <h2>Recipe: handling errors</h2>
+          <p>Provider failures are isolated <strong>per review</strong> — a bad row lands in <code>result.errors[]</code> and the run continues. Adapter/transformer failures are fatal (nothing to analyze) and reject.</p>
+          <pre><code><span class="tok-k">const</span> result = <span class="tok-k">await</span> pipeline.run(csv);
+<span class="tok-k">for</span> (<span class="tok-k">const</span> err <span class="tok-k">of</span> result.errors) {
+  console.warn(err.stage, err.reviewId, err.message);
+  <span class="tok-c">// stage: 'adapter' | 'transform' | 'provider' | 'themes' | 'export'</span>
+}</code></pre>
+          <div class="footer">
+            <p>That's the tour. Back to the <a href="./index.html">documentation</a> · <a href="https://github.com/Aftabul-islam/reviewpipe">source on GitHub</a>. reviewpipe is Apache-2.0.</p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./assets/docs.js"></script>
+  </body>
+</html>

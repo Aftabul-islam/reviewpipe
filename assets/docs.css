@@ -205,3 +205,18 @@ td code { white-space: nowrap; }
   .content { padding: 1.6rem 1.25rem 5rem; }
   .header nav .hide-sm { display: none; }
 }
+
+/* ---- tutorials ---- */
+.content ol.steps { list-style: none; counter-reset: step; padding-left: 0; }
+.content ol.steps > li { counter-increment: step; position: relative; padding-left: 2.5rem; margin: 1.6rem 0; }
+.content ol.steps > li::before {
+  content: counter(step); position: absolute; left: 0; top: 0.05rem;
+  width: 1.7rem; height: 1.7rem; border-radius: 50%; background: var(--accent); color: #fff;
+  font-size: 0.85rem; font-weight: 700; display: grid; place-items: center;
+}
+.content ol.steps > li > strong:first-child { display: block; margin-bottom: 0.35rem; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 0.9rem; margin: 1.3rem 0; }
+.card { border: 1px solid var(--border); border-radius: 12px; padding: 0.95rem 1.05rem; background: var(--surface); }
+.card h3 { margin: 0 0 0.3rem; font-size: 1rem; }
+.card p { margin: 0.25rem 0; font-size: 0.9rem; color: var(--muted); }
+.card a { font-weight: 600; }

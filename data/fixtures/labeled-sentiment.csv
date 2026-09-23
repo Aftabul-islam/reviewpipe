@@ -1,0 +1,49 @@
+id,text,label
+b01,"Absolutely love this, it works perfectly and exceeded my expectations",positive
+b02,"Fantastic quality and the shipping was fast, highly recommend",positive
+b03,"Great value for the money, very happy with my purchase",positive
+b04,"This is excellent, the best product I have bought all year",positive
+b05,"Wonderful experience, the customer support was helpful and kind",positive
+b06,"Perfect fit and great material, will definitely buy again",positive
+b07,"Really impressed, smooth setup and reliable performance",positive
+b08,"Amazing product, my whole family enjoys it every day",positive
+b09,"Good quality and comfortable, exactly what I wanted",positive
+b10,"Very satisfied, arrived early and works great",positive
+b11,"Superb craftsmanship and a beautiful design",positive
+b12,"Delighted with this, it solved my problem instantly",positive
+b13,"Solid and durable, a pleasant surprise for the price",positive
+b14,"Excellent support team resolved my issue quickly",positive
+b15,"Love the color and the fabric feels premium",positive
+b16,"Terrible product, broke after one day and was a waste of money",negative
+b17,"Awful experience, the item arrived damaged and support ignored me",negative
+b18,"Worst purchase ever, cheap material and poor build quality",negative
+b19,"Very disappointed, it stopped working within a week",negative
+b20,"Horrible quality, do not buy this, complete garbage",negative
+b21,"The shipping was slow and the product was defective",negative
+b22,"Hated it, uncomfortable and overpriced for what you get",negative
+b23,"Frustrating and unreliable, it failed during the first use",negative
+b24,"Poor customer service and a faulty item, would not recommend",negative
+b25,"Cheaply made and flimsy, fell apart almost immediately",negative
+b26,"Disappointing, the description was misleading and inaccurate",negative
+b27,"Bad experience overall, the item was broken on arrival",negative
+b28,"Useless product, it never worked as advertised",negative
+b29,"Terrible value, regret buying this, total waste",negative
+b30,"Annoying and slow, the worst customer support I have dealt with",negative
+b31,"It is okay, nothing special but it does the job",neutral
+b32,"Average product, works as described but unremarkable",neutral
+b33,"Fine for the price, neither great nor bad",neutral
+b34,"It arrived on time and looks like the photos",neutral
+b35,"Decent enough, I have no strong feelings about it",neutral
+b36,"The package contained the item and an instruction sheet",neutral
+b37,"It is a standard product that meets basic expectations",neutral
+b38,"Not bad, not great, just an ordinary purchase",neutral
+b39,"Works, though the instructions could be clearer",neutral
+b40,"Reasonable quality for everyday use, nothing more",neutral
+b41,"The item is gray and roughly the size described",neutral
+b42,"It functions, but I would not go out of my way to rebuy",neutral
+b43,"Acceptable, does what it says without any surprises",neutral
+b44,"Middle of the road, comparable to other similar items",neutral
+b45,"It came in a box with the usual accessories included",neutral
+b46,"Five stars, love it, best thing I have purchased",positive
+b47,"Do not waste your money, this is a defective piece of junk",negative
+b48,"It is a product that exists and can be used",neutral

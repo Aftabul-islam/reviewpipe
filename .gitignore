@@ -17,6 +17,9 @@ docs/DEV_GUIDE.md
 # Real downloaded datasets — regenerate via scripts/download-datasets.sh
 data/raw/
 
+# Benchmark output — local only, regenerate via `pnpm benchmark`
+BENCHMARKS.md
+
 # Editor / OS
 .vscode/
 .idea/

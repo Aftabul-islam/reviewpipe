@@ -1,0 +1,18 @@
+{
+  "name": "@reviewpipe/benchmarks",
+  "version": "0.0.0",
+  "description": "Sentiment benchmark harness for reviewpipe providers.",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "benchmark": "tsx src/run.ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@reviewpipe/core": "workspace:*",
+    "@reviewpipe/provider-lexicon": "workspace:*",
+    "@reviewpipe/provider-local": "workspace:*",
+    "csv-parse": "^5.5.6"
+  }
+}

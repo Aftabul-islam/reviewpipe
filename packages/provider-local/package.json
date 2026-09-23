@@ -1,6 +1,6 @@
 {
   "name": "@reviewpipe/provider-local",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Local transformers.js sentiment + embedding provider for reviewpipe (Tier 0). Runs models on-device with no API key.",
   "license": "Apache-2.0",
   "type": "module",
@@ -14,11 +14,14 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE",
+    "NOTICE"
   ],
   "scripts": {
     "build": "tsc -b tsconfig.build.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepack": "pnpm run build && node ../../scripts/copy-license.mjs"
   },
   "dependencies": {
     "@reviewpipe/core": "workspace:*"
@@ -31,5 +34,31 @@
       "optional": true
     }
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "homepage": "https://github.com/Aftabul-islam/reviewpipe#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aftabul-islam/reviewpipe.git",
+    "directory": "packages/provider-local"
+  },
+  "bugs": {
+    "url": "https://github.com/Aftabul-islam/reviewpipe/issues"
+  },
+  "keywords": [
+    "reviewpipe",
+    "reviews",
+    "sentiment",
+    "sentiment-analysis",
+    "nlp",
+    "transformers",
+    "transformers.js",
+    "embeddings",
+    "on-device"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

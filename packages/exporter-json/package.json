@@ -1,6 +1,6 @@
 {
   "name": "@reviewpipe/exporter-json",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "JSON exporter for reviewpipe — serializes an AnalysisResult to JSON.",
   "license": "Apache-2.0",
   "type": "module",
@@ -13,11 +13,15 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
   ],
   "scripts": {
     "build": "tsc -b tsconfig.build.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepack": "pnpm run build && node ../../scripts/copy-license.mjs"
   },
   "dependencies": {
     "@reviewpipe/core": "workspace:*"
@@ -26,5 +30,29 @@
     "@reviewpipe/adapter-csv": "workspace:*",
     "@reviewpipe/provider-lexicon": "workspace:*"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "homepage": "https://github.com/Aftabul-islam/reviewpipe#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aftabul-islam/reviewpipe.git",
+    "directory": "packages/exporter-json"
+  },
+  "bugs": {
+    "url": "https://github.com/Aftabul-islam/reviewpipe/issues"
+  },
+  "keywords": [
+    "reviewpipe",
+    "reviews",
+    "sentiment",
+    "sentiment-analysis",
+    "nlp",
+    "json",
+    "exporter"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

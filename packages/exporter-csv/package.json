@@ -1,6 +1,6 @@
 {
   "name": "@reviewpipe/exporter-csv",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "CSV exporter for reviewpipe — flattens themes and trend into a tidy CSV table.",
   "license": "Apache-2.0",
   "type": "module",
@@ -14,11 +14,14 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE",
+    "NOTICE"
   ],
   "scripts": {
     "build": "tsc -b tsconfig.build.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepack": "pnpm run build && node ../../scripts/copy-license.mjs"
   },
   "dependencies": {
     "@reviewpipe/core": "workspace:*",
@@ -29,5 +32,29 @@
     "@reviewpipe/provider-lexicon": "workspace:*",
     "csv-parse": "^5.5.6"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "homepage": "https://github.com/Aftabul-islam/reviewpipe#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aftabul-islam/reviewpipe.git",
+    "directory": "packages/exporter-csv"
+  },
+  "bugs": {
+    "url": "https://github.com/Aftabul-islam/reviewpipe/issues"
+  },
+  "keywords": [
+    "reviewpipe",
+    "reviews",
+    "sentiment",
+    "sentiment-analysis",
+    "nlp",
+    "csv",
+    "exporter"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

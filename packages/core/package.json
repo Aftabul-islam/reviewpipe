@@ -1,6 +1,6 @@
 {
   "name": "@reviewpipe/core",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Schema, interfaces, and pipeline engine for reviewpipe. Zero ML dependencies.",
   "license": "Apache-2.0",
   "type": "module",
@@ -13,11 +13,39 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
   ],
   "scripts": {
     "build": "tsc -b tsconfig.build.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepack": "pnpm run build && node ../../scripts/copy-license.mjs"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "homepage": "https://github.com/Aftabul-islam/reviewpipe#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aftabul-islam/reviewpipe.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/Aftabul-islam/reviewpipe/issues"
+  },
+  "keywords": [
+    "reviewpipe",
+    "reviews",
+    "sentiment",
+    "sentiment-analysis",
+    "nlp",
+    "pipeline",
+    "text-analysis"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

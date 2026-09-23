@@ -20,6 +20,9 @@ data/raw/
 # Benchmark output — local only, regenerate via `pnpm benchmark`
 BENCHMARKS.md
 
+# Example script output
+examples/*/out/
+
 # Editor / OS
 .vscode/
 .idea/

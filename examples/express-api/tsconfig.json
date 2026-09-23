@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@reviewpipe/core": ["../../packages/core/src/index.ts"],
+      "@reviewpipe/adapter-csv": ["../../packages/adapter-csv/src/index.ts"],
+      "@reviewpipe/provider-lexicon": ["../../packages/provider-lexicon/src/index.ts"]
+    }
+  },
+  "include": ["src/**/*"]
+}

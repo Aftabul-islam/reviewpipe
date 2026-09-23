@@ -18,5 +18,5 @@
       "@reviewpipe/clustering": ["packages/clustering/src/index.ts"]
     }
   },
-  "include": ["packages/*/src/**/*"]
+  "include": ["packages/*/src/**/*", "examples/*/src/**/*"]
 }

@@ -1,0 +1,11 @@
+id,text,rating,date,productId
+r1,"Absolutely love this jacket, the fit is perfect and the material feels premium",5,2026-01-04,SKU-100
+r2,"Shipping took two weeks longer than promised, very frustrating",2,2026-01-06,SKU-100
+r3,"Great quality for the price, would buy again",5,2026-01-09,SKU-101
+r4,"Arrived damaged and the packaging was flimsy",1,2026-01-10,SKU-102
+r5,"It's fine, nothing special but does the job",3,2026-01-12,SKU-101
+r6,"Fast shipping and the item matched the description exactly",5,2026-02-02,SKU-100
+r7,"Poor customer service when I tried to return it",2,2026-02-03,SKU-102
+r8,"The fabric quality has gone downhill compared to last year",2,2026-02-05,SKU-101
+r9,"Comfortable and well made, happy with my purchase",4,2026-02-08,SKU-100
+r10,"Five stars, though it stopped working after a week and support never replied",5,2026-02-09,SKU-103

@@ -1,0 +1,21 @@
+{
+  "name": "node-batch-script",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "reviewpipe example: read a CSV, run the pipeline, write JSON + HTML to disk.",
+  "scripts": {
+    "start": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@reviewpipe/core": "workspace:*",
+    "@reviewpipe/adapter-csv": "workspace:*",
+    "@reviewpipe/provider-lexicon": "workspace:*",
+    "@reviewpipe/clustering": "workspace:*",
+    "@reviewpipe/exporter-json": "workspace:*",
+    "@reviewpipe/exporter-html": "workspace:*"
+  },
+  "devDependencies": {
+    "tsx": "^4"
+  }
+}

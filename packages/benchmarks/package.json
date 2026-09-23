@@ -2,7 +2,7 @@
   "name": "@reviewpipe/benchmarks",
   "version": "0.0.0",
   "description": "Sentiment benchmark harness for reviewpipe providers.",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "private": true,
   "type": "module",
   "scripts": {

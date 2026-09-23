@@ -2,7 +2,7 @@
   "name": "@reviewpipe/provider-huggingface",
   "version": "0.0.0",
   "description": "Hugging Face Inference API provider for reviewpipe (Tier 1) — sentiment, embeddings, and summarization over fetch.",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

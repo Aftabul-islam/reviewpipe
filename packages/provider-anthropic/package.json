@@ -2,7 +2,7 @@
   "name": "@reviewpipe/provider-anthropic",
   "version": "0.0.0",
   "description": "Anthropic (Claude) frontier provider for reviewpipe (Tier 2) — sentiment and summarization via the Anthropic SDK.",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

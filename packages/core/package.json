@@ -2,7 +2,7 @@
   "name": "@reviewpipe/core",
   "version": "0.0.0",
   "description": "Schema, interfaces, and pipeline engine for reviewpipe. Zero ML dependencies.",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

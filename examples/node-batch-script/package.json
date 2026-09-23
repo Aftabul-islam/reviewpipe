@@ -2,6 +2,7 @@
   "name": "node-batch-script",
   "version": "0.0.0",
   "private": true,
+  "license": "Apache-2.0",
   "type": "module",
   "description": "reviewpipe example: read a CSV, run the pipeline, write JSON + HTML to disk.",
   "scripts": {

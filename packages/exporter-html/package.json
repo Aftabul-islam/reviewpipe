@@ -2,7 +2,7 @@
   "name": "@reviewpipe/exporter-html",
   "version": "0.0.0",
   "description": "HTML dashboard exporter for reviewpipe — a self-contained report with inline SVG charts.",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

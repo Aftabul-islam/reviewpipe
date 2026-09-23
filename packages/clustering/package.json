@@ -2,7 +2,7 @@
   "name": "@reviewpipe/clustering",
   "version": "0.0.0",
   "description": "Theme clustering for reviewpipe — groups reviews into labeled themes via embeddings (k-means) or keyword frequency.",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

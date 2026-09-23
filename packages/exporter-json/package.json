@@ -2,7 +2,7 @@
   "name": "@reviewpipe/exporter-json",
   "version": "0.0.0",
   "description": "JSON exporter for reviewpipe — serializes an AnalysisResult to JSON.",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

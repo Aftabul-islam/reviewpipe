@@ -2,7 +2,7 @@
   "name": "@reviewpipe/exporter-csv",
   "version": "0.0.0",
   "description": "CSV exporter for reviewpipe — flattens themes and trend into a tidy CSV table.",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

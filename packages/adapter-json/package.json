@@ -2,7 +2,7 @@
   "name": "@reviewpipe/adapter-json",
   "version": "0.0.0",
   "description": "JSON source adapter for reviewpipe — maps arbitrary JSON records to NormalizedReview[].",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

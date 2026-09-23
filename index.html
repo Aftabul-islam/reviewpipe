@@ -19,6 +19,7 @@
       <nav>
         <a href="./tutorials.html">Tutorials</a>
         <a class="hide-sm" href="#providers">Providers</a>
+        <a href="https://www.npmjs.com/package/@reviewpipe/core">npm</a>
         <a href="https://github.com/Aftabul-islam/reviewpipe">GitHub</a>
       </nav>
       <button id="theme-btn" class="icon-btn" aria-label="Toggle theme">☾</button>
@@ -73,6 +74,7 @@
             </p>
             <div class="btn-row">
               <a class="btn primary" href="#quickstart">Get started →</a>
+              <a class="btn ghost" href="https://www.npmjs.com/package/@reviewpipe/core">npm</a>
               <a class="btn ghost" href="https://github.com/Aftabul-islam/reviewpipe">GitHub</a>
             </div>
           </div>
@@ -117,13 +119,13 @@ result.flagged;          <span class="tok-c">// e.g. 5-star text that reads nega
           <p>Requires <strong>Node 20+</strong>. Install the core plus whichever adapter, provider, and exporter you need:</p>
           <pre><code>npm install @reviewpipe/core @reviewpipe/adapter-csv @reviewpipe/provider-lexicon</code></pre>
 
-          <div class="callout warn">
-            <p class="label">Pre-release</p>
+          <div class="callout note">
+            <p class="label">Early release · v0.1.0</p>
             <p>
-              The packages are not published to a registry yet. Until they are, use reviewpipe from
-              the repository — clone it and run <code>pnpm install</code>, or add a package as a
-              git dependency. The import paths shown throughout these docs are the intended
-              published names.
+              All packages are published on npm under the <code>@reviewpipe</code> scope. This is an
+              early <code>0.1.0</code> release: the API is usable and the lexicon and Anthropic tiers
+              are the most exercised — the local, Hugging Face, and OpenAI tiers are newer, so pin a
+              version and read the release notes before upgrading.
             </p>
           </div>
 

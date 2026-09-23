@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>reviewpipe — documentation</title>
+    <meta
+      name="description"
+      content="reviewpipe: a pluggable pipeline framework for analyzing e-commerce customer reviews — sentiment, themes, and trends. Zero-dependency core."
+    />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='4' fill='%230e7490'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="./assets/docs.css" />
+  </head>
+  <body>
+    <header class="header">
+      <button id="menu-btn" class="icon-btn" aria-label="Toggle navigation">☰</button>
+      <a class="brand" href="#overview"><span class="dot"></span> reviewpipe</a>
+      <span class="spacer"></span>
+      <nav>
+        <a class="hide-sm" href="#quickstart">Quick start</a>
+        <a class="hide-sm" href="#providers">Providers</a>
+        <a href="https://github.com/Aftabul-islam/reviewpipe">GitHub</a>
+      </nav>
+      <button id="theme-btn" class="icon-btn" aria-label="Toggle theme">☾</button>
+    </header>
+
+    <div class="scrim"></div>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="group">
+          <p class="group-title">Getting started</p>
+          <a href="#overview">Overview</a>
+          <a href="#install">Installation</a>
+          <a href="#quickstart">Quick start</a>
+        </div>
+        <div class="group">
+          <p class="group-title">Concepts</p>
+          <a href="#pipeline">The pipeline</a>
+          <a href="#data-model">Data model</a>
+          <a href="#errors">Error handling</a>
+        </div>
+        <div class="group">
+          <p class="group-title">Building blocks</p>
+          <a href="#providers">Providers &amp; tiers</a>
+          <a href="#adapters">Adapters</a>
+          <a href="#transformers">Transformers</a>
+          <a href="#clustering">Theme clustering</a>
+          <a href="#exporters">Exporters</a>
+        </div>
+        <div class="group">
+          <p class="group-title">Reference</p>
+          <a href="#interfaces">Interfaces</a>
+          <a href="#examples">Examples</a>
+          <a href="#faq">FAQ</a>
+        </div>
+      </aside>
+
+      <main class="content">
+        <section id="overview">
+          <div class="hero">
+            <span class="eyebrow">Documentation</span>
+            <h1>reviewpipe</h1>
+            <p class="lead">
+              A pipeline framework for analyzing e-commerce customer reviews —
+              <strong>sentiment, recurring themes, and trends</strong> — with pluggable input
+              formats, pluggable models, and pluggable output formats.
+            </p>
+            <p>
+              Point it at raw reviews, get a structured result out. The core has
+              <strong>zero ML dependencies</strong>; every model- or format-specific piece is its
+              own installable package, so you only pull in what you use.
+            </p>
+            <div class="btn-row">
+              <a class="btn primary" href="#quickstart">Get started →</a>
+              <a class="btn ghost" href="https://github.com/Aftabul-islam/reviewpipe">GitHub</a>
+            </div>
+          </div>
+
+          <pre><code><span class="tok-k">import</span> { Pipeline } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/core'</span>;
+<span class="tok-k">import</span> { CsvAdapter } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/adapter-csv'</span>;
+<span class="tok-k">import</span> { LexiconProvider } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/provider-lexicon'</span>;
+
+<span class="tok-k">const</span> result = <span class="tok-k">await</span> <span class="tok-k">new</span> Pipeline()
+  .source(<span class="tok-k">new</span> CsvAdapter())
+  .provider(<span class="tok-k">new</span> LexiconProvider()) <span class="tok-c">// no API key, no network, no ML deps</span>
+  .run(csvText);
+
+result.overallSentiment; <span class="tok-c">// { score, positive, neutral, negative, reviewCount }</span>
+result.trend;            <span class="tok-c">// sentiment per month</span>
+result.flagged;          <span class="tok-c">// e.g. 5-star text that reads negative</span></code></pre>
+
+          <h3>What it is for</h3>
+          <ul>
+            <li>
+              Turning a batch of reviews (CSV, JSON, platform exports) into a structured
+              <code>AnalysisResult</code>: overall sentiment, a sentiment trend over time, flagged
+              reviews, recurring themes, and an optional narrative summary.
+            </li>
+            <li>
+              Doing it at the accuracy / cost / privacy tradeoff you choose — from an offline
+              word-list to a frontier LLM — behind one interface.
+            </li>
+            <li>Running fully offline with no API keys (the lexicon and local tiers).</li>
+          </ul>
+
+          <h3>What it is not for</h3>
+          <ul>
+            <li>Real-time / streaming analysis of individual reviews — it is batch-oriented.</li>
+            <li>A hosted service, database, or dashboard app — it is a library that produces data and static artifacts.</li>
+            <li>Guaranteed state-of-the-art accuracy out of the box — the lexicon tier is a fast baseline; accuracy scales with the tier you pick.</li>
+          </ul>
+        </section>
+
+        <section id="install">
+          <h2>Installation</h2>
+          <p>Requires <strong>Node 20+</strong>. Install the core plus whichever adapter, provider, and exporter you need:</p>
+          <pre><code>npm install @reviewpipe/core @reviewpipe/adapter-csv @reviewpipe/provider-lexicon</code></pre>
+
+          <div class="callout warn">
+            <p class="label">Pre-release</p>
+            <p>
+              The packages are not published to a registry yet. Until they are, use reviewpipe from
+              the repository — clone it and run <code>pnpm install</code>, or add a package as a
+              git dependency. The import paths shown throughout these docs are the intended
+              published names.
+            </p>
+          </div>
+
+          <p>Each capability is its own package, so a CSV → lexicon → JSON app pulls in exactly one third-party dependency (<code>csv-parse</code>). Heavier tiers keep their model libraries and SDKs as <em>optional</em> peer dependencies.</p>
+        </section>
+
+        <section id="quickstart">
+          <h2>Quick start</h2>
+          <p>Let's analyze a CSV of reviews end to end.</p>
+
+          <h3>1. Prepare some reviews</h3>
+          <p>A CSV needs at least a <code>text</code> column. <code>id</code>, <code>rating</code>, <code>date</code>, <code>author</code>, and <code>productId</code> are optional.</p>
+          <pre><code>id,text,rating,date
+1,"Love this jacket, perfect fit and premium material",5,2026-01-04
+2,"Shipping took two weeks longer than promised",2,2026-01-06
+3,"It's fine, nothing special",3,2026-01-12</code></pre>
+
+          <h3>2. Run the pipeline</h3>
+          <pre><code><span class="tok-k">import</span> { readFileSync } <span class="tok-k">from</span> <span class="tok-s">'node:fs'</span>;
+<span class="tok-k">import</span> { Pipeline } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/core'</span>;
+<span class="tok-k">import</span> { CsvAdapter } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/adapter-csv'</span>;
+<span class="tok-k">import</span> { LexiconProvider } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/provider-lexicon'</span>;
+
+<span class="tok-k">const</span> csv = readFileSync(<span class="tok-s">'reviews.csv'</span>, <span class="tok-s">'utf8'</span>);
+
+<span class="tok-k">const</span> result = <span class="tok-k">await</span> <span class="tok-k">new</span> Pipeline()
+  .source(<span class="tok-k">new</span> CsvAdapter())
+  .provider(<span class="tok-k">new</span> LexiconProvider())
+  .run(csv);
+
+console.log(result.overallSentiment);
+<span class="tok-c">// { score: 0.11, positive: 2, neutral: 0, negative: 1, reviewCount: 3 }</span></code></pre>
+
+          <h3>3. Write an HTML dashboard</h3>
+          <p>Add an exporter to serialize the result. <code>HtmlExporter</code> produces a self-contained dashboard you can open in a browser.</p>
+          <pre><code><span class="tok-k">import</span> { HtmlExporter } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/exporter-html'</span>;
+
+<span class="tok-k">const</span> html = <span class="tok-k">await</span> <span class="tok-k">new</span> Pipeline()
+  .source(<span class="tok-k">new</span> CsvAdapter())
+  .provider(<span class="tok-k">new</span> LexiconProvider())
+  .export(<span class="tok-k">new</span> HtmlExporter({ title: <span class="tok-s">'Reviews report'</span> }))
+  .run(csv);
+
+writeFileSync(<span class="tok-s">'report.html'</span>, html);</code></pre>
+
+          <div class="callout tip">
+            <p class="label">Tip</p>
+            <p>With no exporter, <code>run()</code> returns the <code>AnalysisResult</code> object. With an exporter, it returns that exporter's serialized output (a string or <code>Uint8Array</code>).</p>
+          </div>
+        </section>
+
+        <section id="pipeline">
+          <h2>The pipeline</h2>
+          <p><code>Pipeline</code> is a small builder that wires four — and an optional fifth — pluggable stages, then runs them:</p>
+          <pre><code>source(adapter) → use(transformer)* → provider → [themes(extractor)] → [export(exporter)] → run(input)</code></pre>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Method</th><th>Required</th><th>What it does</th></tr></thead>
+              <tbody>
+                <tr><td><code>.source(adapter)</code></td><td><span class="check">yes</span></td><td>Sets the input adapter (raw input → reviews).</td></tr>
+                <tr><td><code>.use(transformer)</code></td><td><span class="dash">no</span></td><td>Adds a transform step. Chainable; steps run in the order added.</td></tr>
+                <tr><td><code>.provider(provider)</code></td><td><span class="check">yes</span></td><td>Sets the model provider (sentiment / embeddings / summary).</td></tr>
+                <tr><td><code>.themes(extractor)</code></td><td><span class="dash">no</span></td><td>Groups reviews into labeled themes.</td></tr>
+                <tr><td><code>.export(exporter)</code></td><td><span class="dash">no</span></td><td>Serializes the result. Without one, <code>run()</code> returns the result object.</td></tr>
+                <tr><td><code>.run(input)</code></td><td><span class="check">yes</span></td><td>Executes the pipeline. <code>input</code> is passed verbatim to the adapter.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>The provider's <code>capabilities</code> flags decide which stages actually run: a provider that can't summarize simply produces no summary, and the pipeline never calls a method a provider doesn't support.</p>
+        </section>
+
+        <section id="data-model">
+          <h2>Data model</h2>
+          <h3>NormalizedReview</h3>
+          <p>Every adapter produces <code>NormalizedReview[]</code>. Only <code>id</code>, <code>text</code>, and <code>source</code> are guaranteed; real-world exports routinely omit the rest.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Field</th><th>Type</th><th>Notes</th></tr></thead>
+              <tbody>
+                <tr><td><code>id</code></td><td><code>string</code></td><td>Stable id, unique within a run.</td></tr>
+                <tr><td><code>text</code></td><td><code>string</code></td><td>Review body; may be empty.</td></tr>
+                <tr><td><code>rating?</code></td><td><code>number</code></td><td>Star rating on the source's scale (usually 1–5).</td></tr>
+                <tr><td><code>date?</code></td><td><code>string</code></td><td>ISO 8601; trend analysis skips reviews without one.</td></tr>
+                <tr><td><code>author?</code></td><td><code>string</code></td><td>Reviewer name/handle.</td></tr>
+                <tr><td><code>productId?</code></td><td><code>string</code></td><td>Product the review is about.</td></tr>
+                <tr><td><code>source</code></td><td><code>string</code></td><td>Where it came from, set by the adapter.</td></tr>
+                <tr><td><code>raw?</code></td><td><code>unknown</code></td><td>Original record, preserved for debugging.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>AnalysisResult</h3>
+          <p>The structured output of a run:</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Field</th><th>Type</th><th>Notes</th></tr></thead>
+              <tbody>
+                <tr><td><code>schemaVersion</code></td><td><code>string</code></td><td>The result schema version (currently <code>1.0.0</code>).</td></tr>
+                <tr><td><code>overallSentiment</code></td><td><code>OverallSentiment</code></td><td>Mean score in <code>[-1, 1]</code> plus per-label counts.</td></tr>
+                <tr><td><code>themes</code></td><td><code>Theme[]</code></td><td>Recurring topics; empty unless a theme extractor is set.</td></tr>
+                <tr><td><code>summary?</code></td><td><code>string</code></td><td>Present only when the provider can summarize.</td></tr>
+                <tr><td><code>trend</code></td><td><code>TrendPoint[]</code></td><td>Average sentiment per month.</td></tr>
+                <tr><td><code>flagged</code></td><td><code>FlaggedReview[]</code></td><td>Reviews needing attention (rating/text mismatch, strongly negative).</td></tr>
+                <tr><td><code>errors</code></td><td><code>PipelineError[]</code></td><td>Non-fatal per-item failures; empty on a clean run.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="errors">
+          <h2>Error handling</h2>
+          <p>reviewpipe distinguishes <strong>fatal</strong> failures from <strong>per-item</strong> ones.</p>
+          <ul>
+            <li><strong>Per-review provider failures are isolated.</strong> If <code>classifySentiment</code> throws for one review, that review is recorded in <code>result.errors[]</code> and the run continues — one bad row never crashes the batch.</li>
+            <li><strong>Adapter and transformer failures are fatal.</strong> If parsing the input or a transform throws, there is nothing meaningful to analyze, so <code>run()</code> rejects.</li>
+            <li><strong>Summarization failures are non-fatal</strong> — recorded in <code>errors[]</code>, and the result simply has no <code>summary</code>.</li>
+          </ul>
+          <pre><code><span class="tok-k">const</span> result = <span class="tok-k">await</span> pipeline.run(csv);
+<span class="tok-k">for</span> (<span class="tok-k">const</span> err <span class="tok-k">of</span> result.errors) {
+  console.warn(err.stage, err.reviewId, err.message);
+  <span class="tok-c">// stage: 'adapter' | 'transform' | 'provider' | 'themes' | 'export'</span>
+}</code></pre>
+        </section>
+
+        <section id="providers">
+          <h2>Providers &amp; tiers</h2>
+          <p>All providers implement the same <code>AnalysisProvider</code> interface, so switching tiers is a one-line change. A <code>capabilities</code> flag lets the pipeline degrade gracefully.</p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Tier</th><th>Package</th><th>Extra deps</th><th>Network</th><th>Sent.</th><th>Embed.</th><th>Summ.</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>-1 lexicon</td><td><code>@reviewpipe/provider-lexicon</code></td><td>none</td><td>no</td><td class="check">✓</td><td class="dash">—</td><td class="dash">—</td></tr>
+                <tr><td>0 local</td><td><code>@reviewpipe/provider-local</code></td><td><code>@xenova/transformers</code></td><td>first download</td><td class="check">✓</td><td class="check">✓</td><td class="dash">—</td></tr>
+                <tr><td>1 hosted</td><td><code>@reviewpipe/provider-huggingface</code></td><td>none (<code>fetch</code>)</td><td>yes</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+                <tr><td>2 frontier</td><td><code>@reviewpipe/provider-openai</code></td><td><code>openai</code></td><td>yes</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+                <tr><td>2 frontier</td><td><code>@reviewpipe/provider-anthropic</code></td><td><code>@anthropic-ai/sdk</code></td><td>yes</td><td class="check">✓</td><td class="dash">—</td><td class="check">✓</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>Rough guidance: <strong>lexicon</strong> is fastest and most private (nothing leaves your machine) but least nuanced; <strong>local</strong> trades a one-time model download for on-device ML; the <strong>hosted</strong> and <strong>frontier</strong> tiers add summaries and higher accuracy at the cost of latency, an API key, and sending data to a third party.</p>
+
+          <h3>Lexicon (Tier -1)</h3>
+          <pre><code><span class="tok-k">import</span> { LexiconProvider } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/provider-lexicon'</span>;
+<span class="tok-k">new</span> LexiconProvider(); <span class="tok-c">// bundled AFINN word list; scores sentiment offline</span></code></pre>
+
+          <h3>Local (Tier 0)</h3>
+          <pre><code><span class="tok-c">// pnpm add @xenova/transformers</span>
+<span class="tok-k">import</span> { LocalProvider } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/provider-local'</span>;
+<span class="tok-k">new</span> LocalProvider(); <span class="tok-c">// distilled sentiment model + embeddings, on-device</span></code></pre>
+
+          <h3>Hugging Face (Tier 1)</h3>
+          <pre><code><span class="tok-k">import</span> { HuggingFaceProvider } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/provider-huggingface'</span>;
+<span class="tok-k">new</span> HuggingFaceProvider({ apiKey: process.env.HF_TOKEN });
+<span class="tok-c">// retries 429/503 with backoff; configurable batchSize / batchDelayMs</span></code></pre>
+
+          <h3>Frontier (Tier 2)</h3>
+          <pre><code><span class="tok-c">// pnpm add openai   — or   pnpm add @anthropic-ai/sdk</span>
+<span class="tok-k">import</span> { OpenAIProvider } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/provider-openai'</span>;
+<span class="tok-k">import</span> { AnthropicProvider } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/provider-anthropic'</span>;
+
+<span class="tok-k">new</span> OpenAIProvider({ apiKey: process.env.OPENAI_API_KEY });
+<span class="tok-k">new</span> AnthropicProvider({ apiKey: process.env.ANTHROPIC_API_KEY });</code></pre>
+          <p>Both frontier providers set <code>customPrompts: true</code> and accept a <code>promptOverride</code>. Their summarization prompt is exported as <code>SUMMARY_PROMPT</code> so you can inspect or replace it.</p>
+        </section>
+
+        <section id="adapters">
+          <h2>Adapters</h2>
+          <p>An adapter turns raw input into <code>NormalizedReview[]</code>. Adapters own input validation.</p>
+
+          <h3>CsvAdapter</h3>
+          <p>Parses CSV with a header row. The <code>text</code> column is required — a clear error names any missing required column. Remap column names, and set a default <code>source</code>:</p>
+          <pre><code><span class="tok-k">import</span> { CsvAdapter } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/adapter-csv'</span>;
+
+<span class="tok-k">new</span> CsvAdapter({
+  columns: { text: <span class="tok-s">'review_body'</span>, rating: <span class="tok-s">'stars'</span> },
+  source: <span class="tok-s">'amazon-export'</span>,
+});</code></pre>
+
+          <h3>FieldMapAdapter (JSON)</h3>
+          <p>Maps <code>NormalizedReview</code> fields to arbitrary JSON dot-paths (a numeric segment indexes an array). Accepts a parsed value or a JSON string.</p>
+          <pre><code><span class="tok-k">import</span> { FieldMapAdapter } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/adapter-json'</span>;
+
+<span class="tok-k">new</span> FieldMapAdapter(
+  { text: <span class="tok-s">'review_body'</span>, rating: <span class="tok-s">'stars'</span>, productId: <span class="tok-s">'product.id'</span> },
+  { recordsPath: <span class="tok-s">'data.reviews'</span> },
+);</code></pre>
+        </section>
+
+        <section id="transformers">
+          <h2>Transformers</h2>
+          <p>A transformer rewrites the review set before analysis — cleaning, filtering, or deduping. Steps run in the order added. The interface is one method; implementations are yours to write.</p>
+          <pre><code><span class="tok-k">import type</span> { Transformer } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/core'</span>;
+
+<span class="tok-k">const</span> dropEmpty: Transformer = {
+  transform: (reviews) =&gt; reviews.filter((r) =&gt; r.text.trim() !== <span class="tok-s">''</span>),
+};
+
+<span class="tok-k">new</span> Pipeline().source(adapter).use(dropEmpty).provider(provider);</code></pre>
+        </section>
+
+        <section id="clustering">
+          <h2>Theme clustering</h2>
+          <p><code>ClusteringThemeExtractor</code> groups reviews into labeled themes and fills <code>result.themes</code>. When the provider supplies embeddings it clusters with k-means; otherwise it falls back to keyword-frequency grouping — so it works with any provider.</p>
+          <pre><code><span class="tok-c">// pnpm add @reviewpipe/clustering</span>
+<span class="tok-k">import</span> { ClusteringThemeExtractor } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/clustering'</span>;
+
+<span class="tok-k">const</span> result = <span class="tok-k">await</span> <span class="tok-k">new</span> Pipeline()
+  .source(<span class="tok-k">new</span> CsvAdapter())
+  .provider(<span class="tok-k">new</span> LocalProvider())          <span class="tok-c">// embeddings → k-means</span>
+  .themes(<span class="tok-k">new</span> ClusteringThemeExtractor())  <span class="tok-c">// or lexicon → keyword fallback</span>
+  .run(csv);
+
+result.themes; <span class="tok-c">// [{ label, keywords, mentions, sentiment, exampleReviewIds }]</span></code></pre>
+          <p>Each theme carries its distinctive keywords, a mention count, the mean sentiment of its reviews, and a few example review ids. <code>k</code> (cluster count) and the keyword/label counts are configurable.</p>
+        </section>
+
+        <section id="exporters">
+          <h2>Exporters</h2>
+          <p>An exporter turns an <code>AnalysisResult</code> into serialized output.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Exporter</th><th>Package</th><th>Output</th></tr></thead>
+              <tbody>
+                <tr><td><code>JsonExporter</code></td><td><code>@reviewpipe/exporter-json</code></td><td>Pretty JSON; lossless, round-trips exactly.</td></tr>
+                <tr><td><code>CsvExporter</code></td><td><code>@reviewpipe/exporter-csv</code></td><td>Flat table of themes + trend (a <code>section</code>-tagged tidy schema).</td></tr>
+                <tr><td><code>HtmlExporter</code></td><td><code>@reviewpipe/exporter-html</code></td><td>Self-contained dashboard, inline SVG charts, no scripts or CDN.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <pre><code><span class="tok-k">import</span> { JsonExporter } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/exporter-json'</span>;
+<span class="tok-k">import</span> { HtmlExporter } <span class="tok-k">from</span> <span class="tok-s">'@reviewpipe/exporter-html'</span>;
+
+<span class="tok-k">new</span> JsonExporter({ indent: 2 }).export(result); <span class="tok-c">// string</span>
+<span class="tok-k">new</span> HtmlExporter({ title: <span class="tok-s">'Q1 reviews'</span> }).export(result);</code></pre>
+        </section>
+
+        <section id="interfaces">
+          <h2>Interfaces</h2>
+          <p>The five pluggable contracts, all exported from <code>@reviewpipe/core</code>. An <code>Awaitable&lt;T&gt;</code> may be returned synchronously or as a promise.</p>
+          <pre><code><span class="tok-k">interface</span> SourceAdapter {
+  parse(input: unknown): Awaitable&lt;NormalizedReview[]&gt;;
+}
+
+<span class="tok-k">interface</span> Transformer {
+  transform(reviews: NormalizedReview[]): Awaitable&lt;NormalizedReview[]&gt;;
+}
+
+<span class="tok-k">interface</span> AnalysisProvider {
+  readonly name: string;
+  readonly capabilities: ProviderCapabilities; <span class="tok-c">// gates the optional methods</span>
+  classifySentiment?(review: NormalizedReview): Awaitable&lt;SentimentResult&gt;;
+  embed?(review: NormalizedReview): Awaitable&lt;number[]&gt;;
+  summarize?(reviews: NormalizedReview[]): Awaitable&lt;string&gt;;
+}
+
+<span class="tok-k">interface</span> ThemeExtractor {
+  extract(items: ThemeItem[]): Awaitable&lt;Theme[]&gt;;
+}
+
+<span class="tok-k">interface</span> Exporter {
+  export(result: AnalysisResult): Awaitable&lt;string | Uint8Array&gt;;
+}</code></pre>
+          <div class="callout note">
+            <p class="label">Note</p>
+            <p>A provider's optional methods are present exactly when the matching <code>capabilities</code> flag is <code>true</code> — <code>sentiment</code>, <code>embeddings</code>, <code>summarization</code>, and <code>customPrompts</code>. The pipeline checks the flag before calling.</p>
+          </div>
+        </section>
+
+        <section id="examples">
+          <h2>Examples</h2>
+          <p>Two runnable reference integrations live in the repository — both offline, no API key:</p>
+          <ul>
+            <li>
+              <a href="https://github.com/Aftabul-islam/reviewpipe/tree/main/examples/node-batch-script"><strong>node-batch-script</strong></a>
+              — reads a CSV, runs the pipeline, writes <code>report.json</code> and <code>report.html</code> to disk.
+            </li>
+            <li>
+              <a href="https://github.com/Aftabul-islam/reviewpipe/tree/main/examples/express-api"><strong>express-api</strong></a>
+              — a minimal Express <code>POST /analyze</code> route that accepts a CSV body and returns JSON.
+            </li>
+          </ul>
+          <pre><code>pnpm install
+pnpm --filter node-batch-script start   <span class="tok-c"># writes out/report.{json,html}</span>
+pnpm --filter express-api start         <span class="tok-c"># http://localhost:3000</span></code></pre>
+        </section>
+
+        <section id="faq">
+          <h2>FAQ</h2>
+          <h3>Does the core pull in any ML dependencies?</h3>
+          <p>No. <code>@reviewpipe/core</code> has zero runtime dependencies. Model libraries and SDKs live in their own provider packages as optional peer dependencies.</p>
+
+          <h3>Can I run it with no API key?</h3>
+          <p>Yes — the lexicon tier is fully offline and dependency-free, and the local tier runs on-device after a one-time model download. Only the hosted and frontier tiers need a key.</p>
+
+          <h3>What's out of scope for V1?</h3>
+          <ul>
+            <li>Non-English sentiment beyond what a given model supports (the lexicon is English-only).</li>
+            <li>Built-in deduplication or PII-redaction transformers (the interface is provided; implementations are not).</li>
+            <li>Incremental / streaming analysis, persistence, and multi-run diffing.</li>
+            <li>Native embeddings for the Anthropic tier — use the OpenAI or local tier for embedding-based clustering.</li>
+          </ul>
+
+          <div class="footer">
+            <p>
+              reviewpipe is licensed under the Apache License 2.0.
+              <a href="https://github.com/Aftabul-islam/reviewpipe">Source on GitHub</a>.
+            </p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./assets/docs.js"></script>
+  </body>
+</html>

@@ -27,7 +27,7 @@
     "@reviewpipe/core": "workspace:*"
   },
   "sideEffects": false,
-  "homepage": "https://github.com/Aftabul-islam/reviewpipe#readme",
+  "homepage": "https://aftabul-islam.github.io/reviewpipe/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Aftabul-islam/reviewpipe.git",

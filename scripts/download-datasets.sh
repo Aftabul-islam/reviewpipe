@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Downloads real-world review datasets into data/raw/ for manual testing,
-# clustering tuning (Phase 7), and benchmarking (Phase 11).
+# clustering tuning, and benchmarking.
 #
-# Never used in CI — see CLAUDE.md's "Test data" section for why.
+# Never used in CI (slow, network-dependent, licensing varies).
 # Safe to re-run: skips files that already exist.
 
 set -euo pipefail
@@ -34,7 +34,7 @@ else
 fi
 
 # --- Amazon Reviews 2023 (Hugging Face, subset) ---
-# Standard reference dataset, used for the Phase 11 benchmark table.
+# Standard reference dataset for the benchmark suite.
 # Requires the `datasets` Python package OR the huggingface-cli.
 AMAZON_DIR="$RAW_DIR/amazon_reviews_2023"
 if [ -d "$AMAZON_DIR" ] && [ "$(ls -A "$AMAZON_DIR" 2>/dev/null)" ]; then

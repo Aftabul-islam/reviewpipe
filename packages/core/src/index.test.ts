@@ -10,8 +10,8 @@ import {
   type AnalysisResult,
 } from './index.js';
 
-// Phase 1 has no runtime logic — these tests exist to assert the exported
-// types accept the object shapes the rest of the pipeline will build.
+// These types carry no runtime logic — the tests assert that the exported
+// types accept the object shapes the rest of the pipeline builds.
 
 describe('schema and interface shapes', () => {
   it('accepts a fully populated and a minimal NormalizedReview', () => {

@@ -75,7 +75,7 @@ describe('LexiconProvider — end to end through the pipeline', () => {
     expect(out.errors).toEqual([]);
     // Two calendar months of dated reviews.
     expect(out.trend).toHaveLength(2);
-    // Themes stay empty until clustering (Phase 7).
+    // Themes stay empty without a theme extractor.
     expect(out.themes).toEqual([]);
   });
 

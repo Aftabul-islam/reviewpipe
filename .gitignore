@@ -13,6 +13,7 @@ dist/
 
 # Local-only working docs (see CLAUDE.md — this stays on disk, not in git)
 docs/DEV_GUIDE.md
+CLAUDE.md
 
 # Real downloaded datasets — regenerate via scripts/download-datasets.sh
 data/raw/
